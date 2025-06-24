@@ -1,0 +1,37 @@
+name: On Merge
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'speech.txt'
+
+jobs:
+  synthesize:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.13'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Run synthesis
+        run: |
+          python synthesize.py
+
+      - name: Upload to S3 (Prod)
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AcmeLabsSynthesize_AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AcmeLabsSynthesize_AWS_SECRET_ACCESS_KEY }}
+        run: |
+          aws s3 cp polly-audio/speech.mp3 s3://acmelabs-aws-polly-synthesize/polly-audio/prod.mp3
