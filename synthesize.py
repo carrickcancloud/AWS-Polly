@@ -106,5 +106,5 @@ if __name__ == "__main__":
     upload_to_s3(
         audio_stream,
         'acmelabs-aws-polly-synthesize',
-        'speech.mp3'
+        'polly-audio/speech.mp3'
     )
