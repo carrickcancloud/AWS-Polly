@@ -34,4 +34,4 @@ jobs:
           AWS_ACCESS_KEY_ID: ${{ secrets.AcmeLabsSynthesize_AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AcmeLabsSynthesize_AWS_SECRET_ACCESS_KEY }}
         run: |
-          aws s3 cp polly-audio/speech.mp3 s3://acmelabs-aws-polly-synthesize/polly-audio/beta.mp3
+          aws s3 cp polly-audio/speech.mp3 s3://acmelabs-aws-polly-synthesize/polly-audio/beta.mp3 --region us-east-1
