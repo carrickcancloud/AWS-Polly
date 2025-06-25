@@ -137,7 +137,7 @@ To manually trigger a workflow:
 1. Create a new branch.
 2. Make changes to the `speech.txt` file.
 3. Commit and push your changes and create a pull request to trigger the workflow. Review GitHub Actions to ensure the workflow runs successfully.
-4. Merge the pull request into the `main` branch to trigger the workflow. Review the Actions tab in your GitHub repository to see the status of the workflow.
+4. Merge the pull request into the `main` branch to trigger the workflow. Review GitHub Actions to ensure the workflow runs successfully.
 
 ## Verify the Uploaded .mp3 Files
 
