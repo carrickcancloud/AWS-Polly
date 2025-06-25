@@ -123,10 +123,11 @@ if __name__ == "__main__":
 
     # Check if audio_stream is valid before attempting upload
     if isinstance(audio_stream, io.BytesIO):
+        full_s3_key = f"{S3_PREFIX}/{S3_KEY}"
         upload_to_s3(
             audio_stream,
             bucket_name=S3_BUCKET,
-            s3_key=S3_KEY
+            s3_key=full_s3_key
         )
     else:
         print("Failed to synthesize speech.")
