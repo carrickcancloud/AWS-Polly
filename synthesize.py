@@ -1,7 +1,19 @@
 import boto3
+import os
 import io
 from botocore.exceptions import BotoCoreError, ClientError
 from typing import Optional, Union
+
+# Constants for AWS Polly synthesis
+S3_BUCKET = os.environ['AcmeLabsSynthesize_AWS_S3_BUCKET']
+S3_PREFIX = os.environ['AcmeLabsSynthesize_AWS_S3_PREFIX']
+S3_KEY = os.environ['AcmeLabsSynthesize_AWS_S3_KEY']  # This will be either KEY_PROD or KEY_BETA based on the workflow
+
+print(f"Using S3 bucket: {S3_BUCKET}, prefix: {S3_PREFIX}, key: {S3_KEY}")
+
+# Initialize boto3 clients
+polly = boto3.client('polly', region_name='us-east-1')
+s3 = boto3.client('s3')
 
 def synthesize_speech(
         text_file_path: str,
@@ -22,10 +34,8 @@ def synthesize_speech(
         voice_id (str): The voice ID for the synthesis (default is 'Ruth').
 
     Returns:
-        Optional[Union[io.BytesIO, str]]: Audio stream if successful, else an error message string.
+        Optional[Union[io.BytesIO, str]]: Audio stream if successful, else None.
     """
-    polly = boto3.client('polly', region_name='us-east-1')
-
     try:
         # Read the text from the specified file
         with open(text_file_path, 'r') as file:
@@ -51,32 +61,29 @@ def synthesize_speech(
         # Return the audio stream as a BytesIO object
         return io.BytesIO(response['AudioStream'].read())
 
-    except (BotoCoreError, ClientError) as e:
-        # Handle AWS service errors
-        error_message = f"Error occurred while synthesizing speech: {e}"
-        print(error_message)
-        return error_message
     except FileNotFoundError:
         # Handle file not found error
-        error_message = f"File not found: {text_file_path}"
-        print(error_message)
-        return error_message
+        print(f"File not found: {text_file_path}")
+        return None
+
+    except (BotoCoreError, ClientError) as e:
+        # Handle AWS Polly errors
+        print(f"Error occurred while synthesizing speech: {e}")
+        return None
+
     except Exception as e:
         # Handle any other unexpected errors
-        error_message = f"An unexpected error occurred: {e}"
-        print(error_message)
-        return error_message
+        print(f"An unexpected error occurred: {e}")
+        return None
 
 def upload_to_s3(audio_stream: Optional[io.BytesIO], bucket_name: str, s3_key: str) -> None:
     """Upload the audio stream to an S3 bucket.
 
     Args:
         audio_stream (Optional[io.BytesIO]): The audio stream to upload.
-        bucket_name (str): The name of the S3 bucket.
-        s3_key (str): The key under which to store the object in S3.
+        bucket_name (str): Name of the S3 bucket.
+        s3_key (str): Key under which the audio will be stored in S3.
     """
-    s3 = boto3.client('s3')
-
     if audio_stream:
         try:
             audio = audio_stream.read()  # Read the audio stream data into memory
@@ -89,18 +96,18 @@ def upload_to_s3(audio_stream: Optional[io.BytesIO], bucket_name: str, s3_key: s
             s3.put_object(
                 Bucket=bucket_name,
                 ContentLength=content_length,
-                ContentType='audio/mpeg3',
+                ContentType='audio/mpeg',
                 Key=s3_key,
                 Body=audio_bytes
             )
 
             print(f"Audio stream uploaded successfully to S3 bucket '{bucket_name}' with key '{s3_key}'.")
         except ClientError as e:
-            # Handle S3 upload errors
+            # Handle S3 Upload Errors
             print(f"Failed to upload to S3: {e}")
         except Exception as e:
-            # Handle any other unexpected errors during upload
             print(f"An unexpected error occurred during upload: {e}")
+            # Handle any other unexpected errors during upload
     else:
         print("No audio stream returned in the response.")
 
@@ -119,8 +126,8 @@ if __name__ == "__main__":
     if isinstance(audio_stream, io.BytesIO):
         upload_to_s3(
             audio_stream,
-            'acmelabs-aws-polly-synthesize',
-            'polly-audio/speech.mp3'
+            bucket_name=S3_BUCKET,
+            s3_key=S3_KEY
         )
     else:
-        print(f"Failed to synthesize speech: {audio_stream}")
+        print("Failed to synthesize speech.")
