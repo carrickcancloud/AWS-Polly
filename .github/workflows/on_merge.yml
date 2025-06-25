@@ -31,6 +31,9 @@ jobs:
           ACMELABS_SYNTHESIZE_AWS_S3_PREFIX: ${{ vars.ACMELABS_SYNTHESIZE_AWS_S3_KEY_PROD }}
           ACMELABS_SYNTHESIZE_AWS_S3_KEY: ${{ vars.ACMELABS_SYNTHESIZE_AWS_S3_KEY_PROD }}
         run: |
+          echo "S3_BUCKET: ${{ secrets.ACMELABS_SYNTHESIZE_AWS_S3_BUCKET }}"
+          echo "S3_PREFIX: ${{ vars.ACMELABS_SYNTHESIZE_AWS_S3_PREFIX }}"
+          echo "S3_KEY: ${{ vars.ACMELABS_SYNTHESIZE_AWS_S3_KEY_PROD }}"
           python synthesize.py
 
       - name: Upload to S3 (Prod)
