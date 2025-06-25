@@ -1,4 +1,4 @@
- # Speech Synthesis Workflow
+# Speech Synthesis Workflow
 
 This repository contains a GitHub Actions workflow for synthesizing speech from text using Amazon Polly and uploading the resulting audio files to an S3 bucket.
 
@@ -6,9 +6,11 @@ This repository contains a GitHub Actions workflow for synthesizing speech from 
 1. [Setup AWS Credentials and S3 Bucket](#setup-aws-credentials-and-s3-bucket)
 2. [Create an IAM User with Programmatic Access](#create-an-iam-user-with-programmatic-access)
 3. [Attach IAM Policies](#attach-iam-policies)
-4. [Modify the Text](#modify-the-text)
-5. [Trigger the Workflows](#trigger-the-workflows)
-6. [Verify the Uploaded .mp3 Files](#verify-the-uploaded-mp3-files)
+4. [Create Access Keys](#create-access-keys)
+5. [Configure GitHub Secrets](#configure-github-secrets)
+6. [Modify the Text](#modify-the-text)
+7. [Trigger the Workflows](#trigger-the-workflows)
+8. [Verify the Uploaded .mp3 Files](#verify-the-uploaded-mp3-files)
 
 ## Setup AWS Credentials and S3 Bucket
 
@@ -28,10 +30,10 @@ To create an IAM user with programmatic access:
 
 1. Sign in to the [AWS Management Console](https://aws.amazon.com/console/).
 2. Navigate to the IAM service.
-3. Click on "Users" in the sidebar, then "Create user".
-4. Enter a username for the new user, then click on "Next".
-5. Click on "Next".
-6. Click on "Create User".
+3. Click on "Users" in the sidebar, then click on "Add user".
+4. Enter a username for the new user.
+5. In the **Access type** section, check the box for **Programmatic access**.
+6. Click "Next: Permissions" to proceed.
 
 ## Attach IAM Policies
 
@@ -41,79 +43,79 @@ After creating the IAM user, you need to attach the necessary policies:
    - In the IAM console, go to "Policies" and click "Create policy".
    - Switch to the "JSON" tab and paste the following policy:
      ```json
-        {
-            "Version": "2012-10-17",
-            "Statement": [
-                {
-                    "Sid": "AcmeLabsAmazonPollyReadOnly",
-                    "Effect": "Allow",
-                    "Action": [
-                        "polly:SynthesizeSpeech",
-                        "polly:DescribeVoices"
-                    ],
-                    "Resource": "*"
-                }
-            ]
-        }
+     {
+         "Version": "2012-10-17",
+         "Statement": [
+             {
+                 "Sid": "AcmeLabsAmazonPollyReadOnly",
+                 "Effect": "Allow",
+                 "Action": [
+                     "polly:SynthesizeSpeech",
+                     "polly:DescribeVoices"
+                 ],
+                 "Resource": "*"
+             }
+         ]
+     }
      ```
-   - Click "Next", give it a name (`AcmeLabsAmazonPollyReadOnly`), and click on "Create policy".
+   - Click "Next", give it a name (`AcmeLabsAmazonPollyReadOnly`), and click "Create policy".
 
 2. **Create the `AcmeLabsAmazonS3ReadWrite` Policy**:
    - Repeat the steps to create another policy and paste the following JSON:
      ```json
-       {
-            "Version": "2012-10-17",
-            "Statement": [
-                {
-                    "Sid": "AcmeLabsAmazonS3ReadWrite",
-                    "Effect": "Allow",
-                    "Action": [
-                        "s3:PutObject",
-                        "s3:GetObject",
-                        "s3:ListBucket"
-                    ],
-                    "Resource": [
-                        "arn:aws:s3:::acmelabs-aws-polly-synthesize",
-                        "arn:aws:s3:::acmelabs-aws-polly-synthesize/*"
-                    ]
-                }
-            ]
-       }
+     {
+         "Version": "2012-10-17",
+         "Statement": [
+             {
+                 "Sid": "AcmeLabsAmazonS3ReadWrite",
+                 "Effect": "Allow",
+                 "Action": [
+                     "s3:PutObject",
+                     "s3:GetObject",
+                     "s3:ListBucket"
+                 ],
+                 "Resource": [
+                     "arn:aws:s3:::acmelabs-aws-polly-synthesize",
+                     "arn:aws:s3:::acmelabs-aws-polly-synthesize/*"
+                 ]
+             }
+         ]
+     }
      ```
    - Name this policy `AcmeLabsAmazonS3ReadWrite` and create it.
 
 3. **Attach Policies to the User**:
-   - Navigate to the IAM service.
-   - Click on "Users" in the sidebar, then click on your "Username".
-   - Click on "Add permissions", choose "Add Permissions".
-   - Select "Attach policies directly" and select both `AcmeLabsAmazonPollyReadOnly` and `AcmeLabsAmazonS3ReadWrite`.
-   - Click "Next".
-   - Finally, click on "Add permissions".
+   - Navigate back to the IAM service.
+   - Click on "Users" in the sidebar, then click on your new user's name.
+   - Click on "Add permissions", choose "Attach existing policies directly", and select both `AcmeLabsAmazonPollyReadOnly` and `AcmeLabsAmazonS3ReadWrite`.
+   - Click "Next" and then "Add permissions".
 
-4. **Create Access Keys**:
-   - Navigate to the "Security credentials" tab of your user.
-   - Click on "Create access key".
-   - Choose "Other" for the Use case.
-   - Click "Next" and then fill out "Description tag value" (Name the secret.).
-   - Click "Create access key".
-   - Make sure to copy the Access Key ID and Secret Access Key. You will need these for your GitHub Actions workflow.
-   - Store these credentials securely, as you will not be able to view the Secret Access Key again.
-   - You can also download the credentials as a CSV file for safekeeping.
-   - Click "Done" to finish.
+## Create Access Keys
 
-5. **Configure GitHub Secrets**:
-   - Go to your GitHub repository.
-   - Navigate to `Settings` > `Secrets and variables` > `Actions`.
-   - Add the following secrets:
-     - `ACMELABS_SYNTHESIZE_AWS_ACCESS_KEY_ID`: Your AWS Access Key ID.
-     - `ACMELABS_SYNTHESIZE_AWS_SECRET_ACCESS_KEY`: Your AWS Secret Access Key.
-     - `ACMELABS_SYNTHESIZE_AWS_S3_BUCKET`: The name of your S3 bucket.
+1. Navigate to the "Security credentials" tab of your user.
+2. Click on "Create access key".
+3. Choose "Other" for the Use case.
+4. Click "Next" and fill out the "Description tag value" (name the secret).
+5. Click "Create access key".
+6. Make sure to copy the Access Key ID and Secret Access Key. You will need these for your GitHub Actions workflow.
+7. Store these credentials securely, as you will not be able to view the Secret Access Key again.
+8. You can also download the credentials as a CSV file for safekeeping.
+9. Click "Done" to finish.
 
-   - Add the following environment variables:
-     - `ACMELABS_SYNTHESIZE_AWS_REGION`: The region of your S3 bucket (e.g., `us-east-1`).
-     - `ACMELABS_SYNTHESIZE_AWS_S3_KEY_PROD`: The key for production uploads (e.g., `prod.mp3`).
-     - `ACMELABS_SYNTHESIZE_AWS_S3_KEY_BETA`: The key for beta uploads (e.g., `beta.mp3`).
-     - `ACMELABS_SYNTHESIZE_AWS_S3_PREFIX`: The prefix for your S3 bucket (e.g., `polly-audio`).
+## Configure GitHub Secrets
+
+1. Go to your GitHub repository.
+2. Navigate to `Settings` > `Secrets and variables` > `Actions`.
+3. Add the following secrets:
+   - `ACMELABS_SYNTHESIZE_AWS_ACCESS_KEY_ID`: Your AWS Access Key ID.
+   - `ACMELABS_SYNTHESIZE_AWS_SECRET_ACCESS_KEY`: Your AWS Secret Access Key.
+   - `ACMELABS_SYNTHESIZE_AWS_S3_BUCKET`: The name of your S3 bucket.
+
+4. Add the following environment variables:
+   - `ACMELABS_SYNTHESIZE_AWS_REGION`: The region of your S3 bucket (e.g., `us-east-1`).
+   - `ACMELABS_SYNTHESIZE_AWS_S3_KEY_PROD`: The key for production uploads (e.g., `prod.mp3`).
+   - `ACMELABS_SYNTHESIZE_AWS_S3_KEY_BETA`: The key for beta uploads (e.g., `beta.mp3`).
+   - `ACMELABS_SYNTHESIZE_AWS_S3_PREFIX`: The prefix for your S3 bucket (e.g., `polly-audio`).
 
 ## Modify the Text
 
@@ -128,8 +130,8 @@ To modify the text that will be synthesized:
 
 The workflows are triggered automatically based on changes to the `speech.txt` file:
 
--   **On Merge**: This workflow runs when changes are pushed to the `main` branch.
--   **On Pull Request**: This workflow runs when a pull request is made to the `main` branch.
+-    **On Merge**: This workflow runs when changes are pushed to the `main` branch.
+-    **On Pull Request**: This workflow runs when a pull request is made to the `main` branch.
 
 To manually trigger a workflow:
 1. Create a new branch.
