@@ -4,14 +4,14 @@ import io
 from botocore.exceptions import BotoCoreError, ClientError
 from typing import Optional, Union
 
+# Debugging: Print the S3_BUCKET environment variable
+print("Debugging S3_BUCKET:", os.environ.get('ACMELABS_SYNTHESIZE_AWS_S3_BUCKET'))
+
 # Constants for AWS Polly synthesis
 # These are set from GitHub Actions Workflows
 S3_BUCKET = os.environ['ACMELABS_SYNTHESIZE_AWS_S3_BUCKET']
 S3_PREFIX = os.environ['ACMELABS_SYNTHESIZE_AWS_S3_PREFIX']
 S3_KEY = os.environ['ACMELABS_SYNTHESIZE_AWS_S3_KEY']
-
-# Debugging: Print the S3_BUCKET environment variable
-print("Debugging S3_BUCKET:", os.environ.get('ACMELABS_SYNTHESIZE_AWS_S3_BUCKET'))
 
 # Initialize boto3 clients
 polly = boto3.client('polly', region_name='us-east-1')
