@@ -32,6 +32,10 @@ jobs:
           aws-secret-access-key: ${{ secrets.ACMELABS_SYNTHESIZE_AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ vars.ACMELABS_SYNTHESIZE_AWS_REGION }}
 
+      - name: Debug S3 Bucket Environment Variable
+        run:
+          echo "S3_BUCKET: ${{ secrets.ACMELABS_SYNTHESIZE_AWS_S3_BUCKET }}"
+
       - name: Run synthesis
         env:
           ACMELABS_SYNTHESIZE_AWS_S3_BUCKET: ${{ secrets.ACMELABS_SYNTHESIZE_AWS_S3_BUCKET }}
