@@ -124,7 +124,7 @@ To modify the text that will be synthesized:
 1. Open the `speech.txt` file located in the repository.
 2. Edit the content of the file as needed. For example:
  Where’s the kaboom? There was supposed to be an earth-shattering kaboom!
- 3. Save your changes.
+3. Save your changes.
 
 ## Trigger the Workflows
 
