@@ -4,8 +4,10 @@ import io
 from botocore.exceptions import BotoCoreError, ClientError
 from typing import Optional, Union
 
-# Debugging: Print the S3_BUCKET environment variable
-print("Debugging S3_BUCKET:", os.environ.get('ACMELABS_SYNTHESIZE_AWS_S3_BUCKET'))
+# Print all environment variables from GitHub Actions
+    print("All Environment Variables:")
+    for key, value in os.environ.items():
+        print(f"{key}: {value}")
 
 # Constants for AWS Polly synthesis
 # These are set from GitHub Actions Workflows
