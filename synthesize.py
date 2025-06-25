@@ -5,9 +5,9 @@ from botocore.exceptions import BotoCoreError, ClientError
 from typing import Optional, Union
 
 # Print all environment variables from GitHub Actions
-    print("All Environment Variables:")
-    for key, value in os.environ.items():
-        print(f"{key}: {value}")
+print("All Environment Variables:")
+for key, value in os.environ.items():
+    print(f"{key}: {value}")
 
 # Constants for AWS Polly synthesis
 # These are set from GitHub Actions Workflows
