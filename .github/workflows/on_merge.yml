@@ -33,8 +33,7 @@ jobs:
           aws-region: ${{ vars.ACMELABS_SYNTHESIZE_AWS_REGION }}
 
       - name: Debug S3 Bucket Environment Variable
-        run:
-          echo "S3_BUCKET: ${{ secrets.ACMELABS_SYNTHESIZE_AWS_S3_BUCKET }}"
+        run: echo "S3_BUCKET: ${{ secrets.ACMELABS_SYNTHESIZE_AWS_S3_BUCKET }}"  # No pipe needed here
 
       - name: Run synthesis
         env:
