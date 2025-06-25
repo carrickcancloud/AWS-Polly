@@ -8,9 +8,8 @@ This repository contains a GitHub Actions workflow for synthesizing speech from 
 3. [Attach IAM Policies](#attach-iam-policies)
 4. [Create Access Keys](#create-access-keys)
 5. [Configure GitHub Secrets](#configure-github-secrets)
-6. [Modify the Text](#modify-the-text)
-7. [Trigger the Workflows](#trigger-the-workflows)
-8. [Verify the Uploaded .mp3 Files](#verify-the-uploaded-mp3-files)
+6. [Trigger the Workflows](#trigger-the-workflows)
+7. [Verify the Uploaded .mp3 Files](#verify-the-uploaded-mp3-files)
 
 ## Setup AWS Credentials and S3 Bucket
 
@@ -117,27 +116,22 @@ After creating the IAM user, you need to attach the necessary policies:
    - `ACMELABS_SYNTHESIZE_AWS_S3_KEY_BETA`: The key for beta uploads (e.g., `beta.mp3`).
    - `ACMELABS_SYNTHESIZE_AWS_S3_PREFIX`: The prefix for your S3 bucket (e.g., `polly-audio`).
 
-## Modify the Text
-
-To modify the text that will be synthesized:
-
-1. Open the `speech.txt` file located in the repository.
-2. Edit the content of the file as needed. For example:
- Where’s the kaboom? There was supposed to be an earth-shattering kaboom!
-3. Save your changes.
-
 ## Trigger the Workflows
 
 The workflows are triggered automatically based on changes to the `speech.txt` file:
 
--    **On Merge**: This workflow runs when changes are pushed to the `main` branch.
--    **On Pull Request**: This workflow runs when a pull request is made to the `main` branch.
-
-To manually trigger a workflow:
 1. Create a new branch.
 2. Make changes to the `speech.txt` file.
-3. Commit and push your changes and create a pull request to trigger the workflow. Review GitHub Actions to ensure the workflow runs successfully.
-4. Merge the pull request into the `main` branch to trigger the workflow. Review GitHub Actions to ensure the workflow runs successfully.
+   - Open the `speech.txt` file located in the repository.
+   - Edit the content of the file as needed. For example:
+     ```
+     Where’s the kaboom? There was supposed to be an earth-shattering kaboom!
+     ```
+   - Save your changes.
+3. Commit and push your changes and create a pull request into the `main` branch to trigger the workflow.
+   - Review GitHub Actions to ensure the workflow runs successfully.
+4. Merge the pull request into the `main` branch to trigger the workflow. 
+   - Review GitHub Actions to ensure the workflow runs successfully.
 
 ## Verify the Uploaded .mp3 Files
 
