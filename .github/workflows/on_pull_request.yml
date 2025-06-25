@@ -27,15 +27,15 @@ jobs:
 
       - name: Run synthesis
         env:
-          AcmeLabsSynthesize_AWS_S3_BUCKET: ${{ secrets.AcmeLabsSynthesize_AWS_S3_BUCKET }}
-          AcmeLabsSynthesize_AWS_S3_PREFIX: ${{ vars.AcmeLabsSynthesize_AWS_S3_PREFIX }}
-          AcmeLabsSynthesize_AWS_S3_KEY: ${{ vars.AcmeLabsSynthesize_AWS_S3_KEY_BETA }}
+          ACMELABS_SYNTHESIZE_AWS_S3_BUCKET: ${{ secrets.ACMELABS_SYNTHESIZE_AWS_S3_BUCKET }}
+          ACMELABS_SYNTHESIZE_AWS_S3_PREFIX: ${{ vars.ACMELABS_SYNTHESIZE_AWS_S3_PREFIX }}
+          ACMELABS_SYNTHESIZE_AWS_S3_KEY: ${{ vars.ACMELABS_SYNTHESIZE_AWS_S3_KEY_BETA }}
         run: |
           python synthesize.py
 
       - name: Upload to S3 (Beta)
         env:
-          AWS_ACCESS_KEY_ID: ${{ secrets.AcmeLabsSynthesize_AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AcmeLabsSynthesize_AWS_SECRET_ACCESS_KEY }}
+          AWS_ACCESS_KEY_ID: ${{ secrets.ACMELABS_SYNTHESIZE_AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.ACMELABS_SYNTHESIZE_AWS_SECRET_ACCESS_KEY }}
         run: |
           python synthesize.py
