@@ -45,7 +45,7 @@ After creating the IAM user, you need to attach the necessary policies:
             "Version": "2012-10-17",
             "Statement": [
                 {
-                    "Sid": "VisualEditor0",
+                    "Sid": "AcmeLabsAmazonPollyReadOnly",
                     "Effect": "Allow",
                     "Action": [
                         "polly:SynthesizeSpeech",
@@ -61,24 +61,24 @@ After creating the IAM user, you need to attach the necessary policies:
 2. **Create the `AcmeLabsAmazonS3ReadWrite` Policy**:
    - Repeat the steps to create another policy and paste the following JSON:
      ```json
-    {
-        "Version": "2012-10-17",
-        "Statement": [
-            {
-                "Sid": "VisualEditor0",
-                "Effect": "Allow",
-                "Action": [
-                    "s3:PutObject",
-                    "s3:GetObject",
-                    "s3:ListBucket"
-                ],
-                "Resource": [
-                    "arn:aws:s3:::acmelabs-aws-polly-synthesize",
-                    "arn:aws:s3:::acmelabs-aws-polly-synthesize/*"
-                ]
-            }
-        ]
-    }
+       {
+            "Version": "2012-10-17",
+            "Statement": [
+                {
+                    "Sid": "AcmeLabsAmazonS3ReadWrite",
+                    "Effect": "Allow",
+                    "Action": [
+                        "s3:PutObject",
+                        "s3:GetObject",
+                        "s3:ListBucket"
+                    ],
+                    "Resource": [
+                        "arn:aws:s3:::acmelabs-aws-polly-synthesize",
+                        "arn:aws:s3:::acmelabs-aws-polly-synthesize/*"
+                    ]
+                }
+            ]
+       }
      ```
    - Name this policy `AcmeLabsAmazonS3ReadWrite` and create it.
 
