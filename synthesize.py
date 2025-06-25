@@ -5,11 +5,10 @@ from botocore.exceptions import BotoCoreError, ClientError
 from typing import Optional, Union
 
 # Constants for AWS Polly synthesis
-S3_BUCKET = os.environ['AcmeLabsSynthesize_AWS_S3_BUCKET']
-S3_PREFIX = os.environ['AcmeLabsSynthesize_AWS_S3_PREFIX']
-S3_KEY = os.environ['AcmeLabsSynthesize_AWS_S3_KEY']  # This will be either KEY_PROD or KEY_BETA based on the workflow
-
-print(f"Using S3 bucket: {S3_BUCKET}, prefix: {S3_PREFIX}, key: {S3_KEY}")
+# These are set from GitHub Actions Workflows
+S3_BUCKET = os.environ['ACMELABS_SYNTHESIZE_AWS_S3_BUCKET']
+S3_PREFIX = os.environ['ACMELABS_SYNTHESIZE_AWS_S3_PREFIX']
+S3_KEY = os.environ['ACMELABS_SYNTHESIZE_AWS_S3_KEY']
 
 # Initialize boto3 clients
 polly = boto3.client('polly', region_name='us-east-1')
