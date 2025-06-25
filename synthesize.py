@@ -10,6 +10,9 @@ S3_BUCKET = os.environ['ACMELABS_SYNTHESIZE_AWS_S3_BUCKET']
 S3_PREFIX = os.environ['ACMELABS_SYNTHESIZE_AWS_S3_PREFIX']
 S3_KEY = os.environ['ACMELABS_SYNTHESIZE_AWS_S3_KEY']
 
+# Debugging: Print the S3_BUCKET environment variable
+print("Debugging S3_BUCKET:", os.environ.get('ACMELABS_SYNTHESIZE_AWS_S3_BUCKET'))
+
 # Initialize boto3 clients
 polly = boto3.client('polly', region_name='us-east-1')
 s3 = boto3.client('s3')
