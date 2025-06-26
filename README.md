@@ -29,12 +29,12 @@ To create an IAM user with programmatic access:
 
 1. Sign in to the [AWS Management Console](https://aws.amazon.com/console/).
 2. Navigate to the IAM service.
-3. Click on "Users" in the sidebar, then click on "Add user".
-4. Enter a username for the new user.
-5. In the **Access type** section, check the box for **Programmatic access**.
-6. Click "Next: Permissions" to proceed.
+3. Click on "Users" in the sidebar, then click on "Create user".
+4. Enter a username for the new user and click on "Next" to proceed to the **Set permissions** section.
+5. Click on "Next" to proceed to the "Review and create" section.
+6. Click "Create user" to proceed.
 
-## Attach IAM Policies
+## Create & Attach IAM Policies
 
 After creating the IAM user, you need to attach the necessary policies:
 
@@ -84,37 +84,57 @@ After creating the IAM user, you need to attach the necessary policies:
    - Name this policy `AcmeLabsAmazonS3ReadWrite` and create it.
 
 3. **Attach Policies to the User**:
-   - Navigate back to the IAM service.
    - Click on "Users" in the sidebar, then click on your new user's name.
+   - Click on the "Permissions" tab.
    - Click on "Add permissions", choose "Attach existing policies directly", and select both `AcmeLabsAmazonPollyReadOnly` and `AcmeLabsAmazonS3ReadWrite`.
    - Click "Next" and then "Add permissions".
 
 ## Create Access Keys
 
 1. Navigate to the "Security credentials" tab of your user.
-2. Click on "Create access key".
-3. Choose "Other" for the Use case.
-4. Click "Next" and fill out the "Description tag value" (name the secret).
-5. Click "Create access key".
-6. Make sure to copy the Access Key ID and Secret Access Key. You will need these for your GitHub Actions workflow.
-7. Store these credentials securely, as you will not be able to view the Secret Access Key again.
-8. You can also download the credentials as a CSV file for safekeeping.
-9. Click "Done" to finish.
+2. Click on "Create access key" tab.
+3. Click on "Other" for the "Use case".
+4. Click on "Next" and fill out the "Description tag value" (name the secret).
+5. Click on "Create access key".
+6. Make sure to copy the Access Key ID and Secret Access Key.
+   - You will need these for your GitHub Actions workflow.
+   - **Store** these credentials **securely**, as you will not be able to **view** the Secret Access Key again.
+   - You can also download the credentials as a CSV file for safekeeping.
+7. Click "Done" to finish.
 
 ## Configure GitHub Secrets
 
 1. Go to your GitHub repository.
 2. Navigate to `Settings` > `Secrets and variables` > `Actions`.
 3. Add the following secrets:
-   - `ACMELABS_SYNTHESIZE_AWS_ACCESS_KEY_ID`: Your AWS Access Key ID.
-   - `ACMELABS_SYNTHESIZE_AWS_SECRET_ACCESS_KEY`: Your AWS Secret Access Key.
-   - `ACMELABS_SYNTHESIZE_AWS_S3_BUCKET`: The name of your S3 bucket.
+   1. Click on the "Secrets" tab.
+   2. Click on "New repository secret".
+   3. Name the secrets as follows:
+      - `ACMELABS_SYNTHESIZE_AWS_ACCESS_KEY_ID`
+      - `ACMELABS_SYNTHESIZE_AWS_SECRET_ACCESS_KEY`
+      - `ACMELABS_SYNTHESIZE_AWS_S3_BUCKET`
+   4. Enter the corresponding values for each secret.
+      - For example:
+        - `ACMELABS_SYNTHESIZE_AWS_ACCESS_KEY_ID`: `AKIAIOSFODNN7EXAMPLE`
+        - `ACMELABS_SYNTHESIZE_AWS_SECRET_ACCESS_KEY`: `wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY`
+        - `ACMELABS_SYNTHESIZE_AWS_S3_BUCKET`: `acmelabs-aws-polly-synthesize`
+   5. Click "Add secret" to save each one.
 
 4. Add the following environment variables:
-   - `ACMELABS_SYNTHESIZE_AWS_REGION`: The region of your S3 bucket (e.g., `us-east-1`).
-   - `ACMELABS_SYNTHESIZE_AWS_S3_KEY_PROD`: The key for production uploads (e.g., `prod.mp3`).
-   - `ACMELABS_SYNTHESIZE_AWS_S3_KEY_BETA`: The key for beta uploads (e.g., `beta.mp3`).
-   - `ACMELABS_SYNTHESIZE_AWS_S3_PREFIX`: The prefix for your S3 bucket (e.g., `polly-audio`).
+   1. Click on the "Variables" tab.
+   2. Click on "New repository variable".
+   3. Name the variables as follows:
+      - `ACMELABS_SYNTHESIZE_AWS_REGION`
+      - `ACMELABS_SYNTHESIZE_AWS_S3_KEY_PROD`
+      - `ACMELABS_SYNTHESIZE_AWS_S3_KEY_BETA`
+      - `ACMELABS_SYNTHESIZE_AWS_S3_PREFIX`
+   4. Enter the corresponding values for each variable.
+      - For example:
+        - `ACMELABS_SYNTHESIZE_AWS_REGION`: `us-east-1`
+        - `ACMELABS_SYNTHESIZE_AWS_S3_KEY_PROD`: `prod.mp3`
+        - `ACMELABS_SYNTHESIZE_AWS_S3_KEY_BETA`: `beta.mp3`
+        - `ACMELABS_SYNTHESIZE_AWS_S3_PREFIX`: `polly-audio`
+   5. Click "Add variable" to save each one.
 
 ## Trigger the Workflows
 
@@ -130,8 +150,16 @@ The workflows are triggered automatically based on changes to the `speech.txt` f
    - Save your changes.
 3. Commit and push your changes and create a pull request into the `main` branch to trigger the workflow.
    - Review GitHub Actions to ensure the workflow runs successfully.
+     1. Click on "Actions" tab in your GitHub repository.
+     2. In the left sidebar, select the workflow named `On Pull Request`.
+     3. Click on the latest run to view the details.
+     4. Check the logs to ensure that the speech synthesis and S3 upload steps completed successfully.
 4. Merge the pull request into the `main` branch to trigger the workflow. 
    - Review GitHub Actions to ensure the workflow runs successfully.
+     1. Click on "Actions" tab in your GitHub repository.
+     2. In the left sidebar, select the workflow named `On Merge`.
+     3. Click on the latest run to view the details.
+     4. Check the logs to ensure that the speech synthesis and S3 upload steps completed successfully.
 
 ## Verify the Uploaded .mp3 Files
 
